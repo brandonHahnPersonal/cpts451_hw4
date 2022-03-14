@@ -48,7 +48,14 @@ ORDER BY meeting_id;
 
 
 
-
+--find the students who didn't attend any meetings of a course that they are enrolled in
+SELECT distinct b1.student_id, b1.course_id
+FROM 
+(
+select distinct e1.student_id, e1.course_id
+FROM meeting m1 INNER JOIN enrolledin e1 ON m1.course_id = e1.course_id
+EXCEPT
 SELECT distinct e1.student_id, e1.course_id
 FROM (enrolledin e1 INNER JOIN meeting m1 ON e1.course_id = m1.course_id) INNER JOIN attended a1 ON m1.meeting_id = a1.meeting_id
-WHERE e1.student_id = a1.student_id
+WHERE e1.student_id = a1.student_id) as b1
+ORDER BY b1.student_id
