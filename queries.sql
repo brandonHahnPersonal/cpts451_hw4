@@ -12,7 +12,16 @@ GROUP BY enrolledin.course_id, course.title, teaches.instructor_id, users.firstn
 HAVING COUNT(enrolledin.course_id) > 3
 ORDER BY enrolledin.course_id
 
+
 -- find the pair of messages that are posted at the same time by different users	
 SELECT table1.meeting_id, table1.message_time, concat(table1.message_text, CHR(13), table2.message_text) AS message, table1.user_id, table2.user_id
 FROM message table1 INNER JOIN message table2 ON table1.message_time = table2.message_time
 WHERE table1.message_time = table2.message_time AND table1.user_id < table2.user_id 
+
+
+-- find the distinct instructors that teach "Machine Learning" and "Artificial Intelligence" And teach more than two courses each
+SELECT users.firstname, users.lastname
+FROM (academicfields table1 INNER JOIN academicfields table2 ON table1.instructor_id = table2.instructor_id) INNER JOIN users ON table1. instructor_id = user_id
+WHERE table1.instructor_id = table2.instructor_id AND table1.academicfield = 'Machine Learning' AND table2.academicfield = 'Artificial Intelligence'
+
+
