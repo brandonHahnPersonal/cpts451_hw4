@@ -58,4 +58,29 @@ EXCEPT
 SELECT distinct e1.student_id, e1.course_id
 FROM (enrolledin e1 INNER JOIN meeting m1 ON e1.course_id = m1.course_id) INNER JOIN attended a1 ON m1.meeting_id = a1.meeting_id
 WHERE e1.student_id = a1.student_id) as b1
-ORDER BY b1.student_id
+ORDER BY b1.student_id;
+
+
+-- find the CPTS451 students that missed a class, but watched the lecture
+
+SELECT z3.student_id, z4.meeting_id, z4.title, z3.recording_number
+FROM(
+SELECT distinct z1.student_id, z1.meeting_id, z2.recording_number
+FROM(
+SELECT b2.student_id, b1.meeting_id
+FROM(
+select *
+FROM (
+select student_id, meeting_id FROM watched
+EXCEPT
+(
+SELECT a1.student_id, a1.meeting_id 
+FROM attended as a1 INNER JOIN (SELECT meeting_id FROM meeting WHERE course_id = 'CptS451') as m1 ON a1.meeting_id = m1.meeting_id
+where a1.meeting_id = m1.meeting_id)) as t1) as b1
+INNER JOIN
+(
+select * from enrolledin where course_id = 'CptS451'
+	) as b2
+ON b1.student_id = b2.student_id
+) as z1 INNER JOIN watched as z2 ON z1.student_id = z2.student_id) AS z3 INNER JOIN meeting as z4 ON z3.meeting_id = z4.meeting_id
+ORDER BY z3.student_id
