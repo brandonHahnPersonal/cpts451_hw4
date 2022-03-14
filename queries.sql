@@ -36,3 +36,14 @@ HAVING duration > ALL
 ORDER BY meeting_id
 
 
+--Find the meetings whose durations are longer than the average duration of the meetings for the course they belong to
+SELECT *
+FROM meeting table1
+WHERE table1.duration > 
+	(SELECT AVG(duration)
+	 FROM meeting averageTable
+	 WHERE table1.course_id = averageTable.course_id
+	)
+ORDER BY meeting_id
+
+
