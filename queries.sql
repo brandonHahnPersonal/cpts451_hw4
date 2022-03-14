@@ -105,3 +105,32 @@ ON m1.meeting_id = meet1.meeting_id
 ON maxM.max = mess.message_time) as b1
 INNER JOIN users u1 
 ON b1.user_id = u1.user_id;
+
+
+
+-- find when the number of messages posted by the instructors is greater than the number of messages from students
+SELECT z.meeting_id, meet.title, z.instructorcount as icount, z.studentcount as scount
+FROM (
+SELECT stude.meeting_id, instruc.instructorcount, stude.studentcount FROM (
+SELECT m1.meeting_id, SUM(m1.count) as instructorCount
+FROM (
+select meeting_id, user_id, COUNT(user_id)
+FROM message
+GROUP BY meeting_id, user_id
+ORDER BY meeting_id) as m1 INNER JOIN instructor in1 ON m1.user_id = in1.instructor_id
+GROUP BY m1.meeting_id
+) as instruc
+INNER JOIN 
+(
+SELECT m1.meeting_id, SUM(m1.count) as studentCount
+FROM (
+select meeting_id, user_id, COUNT(user_id)
+FROM message
+GROUP BY meeting_id, user_id
+ORDER BY meeting_id) as m1 INNER JOIN student s1 ON m1.user_id = s1.student_id
+GROUP BY m1.meeting_id
+)
+as stude
+ON instruc.meeting_id = stude.meeting_id
+) as z INNER JOIN meeting as meet ON z.meeting_id = meet.meeting_id
+WHERE z.instructorcount > z.studentcount;
