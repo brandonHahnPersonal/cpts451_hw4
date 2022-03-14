@@ -47,3 +47,8 @@ WHERE table1.duration >
 ORDER BY meeting_id
 
 
+
+
+SELECT distinct e1.student_id, e1.course_id
+FROM (enrolledin e1 INNER JOIN meeting m1 ON e1.course_id = m1.course_id) INNER JOIN attended a1 ON m1.meeting_id = a1.meeting_id
+WHERE e1.student_id = a1.student_id
