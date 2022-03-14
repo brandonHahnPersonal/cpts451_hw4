@@ -11,3 +11,8 @@ FROM enrolledin INNER JOIN course ON enrolledin.course_id = course.course_id INN
 GROUP BY enrolledin.course_id, course.title, teaches.instructor_id, users.firstname, users.lastname
 HAVING COUNT(enrolledin.course_id) > 3
 ORDER BY enrolledin.course_id
+
+-- find the pair of messages that are posted at the same time by different users	
+SELECT table1.meeting_id, table1.message_time, concat(table1.message_text, CHR(13), table2.message_text) AS message, table1.user_id, table2.user_id
+FROM message table1 INNER JOIN message table2 ON table1.message_time = table2.message_time
+WHERE table1.message_time = table2.message_time AND table1.user_id < table2.user_id 
