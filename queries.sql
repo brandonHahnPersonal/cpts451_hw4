@@ -62,7 +62,6 @@ ORDER BY b1.student_id;
 
 
 -- find the CPTS451 students that missed a class, but watched the lecture
-
 SELECT z3.student_id, z4.meeting_id, z4.title, z3.recording_number
 FROM(
 SELECT distinct z1.student_id, z1.meeting_id, z2.recording_number
@@ -83,4 +82,26 @@ select * from enrolledin where course_id = 'CptS451'
 	) as b2
 ON b1.student_id = b2.student_id
 ) as z1 INNER JOIN watched as z2 ON z1.student_id = z2.student_id) AS z3 INNER JOIN meeting as z4 ON z3.meeting_id = z4.meeting_id
-ORDER BY z3.student_id
+ORDER BY z3.student_id;
+
+
+
+
+--Find most recent message from CPTS courses
+SELECT b1.user_id, u1.firstname, u1.lastname, b1.message_text, b1.meeting_id FROM (
+select *
+FROM(
+SELECT MAX(m1.message_time)
+FROM (
+SELECT user_id, message_time, message_text, meeting_id
+FROM message
+) as m1 INNER JOIN (
+SELECT meeting_id
+FROM meeting
+WHERE course_id LIKE 'CptS%'
+) as meet1
+ON m1.meeting_id = meet1.meeting_id
+) as maxM INNER JOIN message mess
+ON maxM.max = mess.message_time) as b1
+INNER JOIN users u1 
+ON b1.user_id = u1.user_id;
