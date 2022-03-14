@@ -25,3 +25,14 @@ FROM (academicfields table1 INNER JOIN academicfields table2 ON table1.instructo
 WHERE table1.instructor_id = table2.instructor_id AND table1.academicfield = 'Machine Learning' AND table2.academicfield = 'Artificial Intelligence'
 
 
+--Find the meetings whose durations are longer than the average duration of all meetings
+SELECT *
+FROM meeting
+GROUP BY meeting_id
+HAVING duration > ALL
+	(SELECT AVG(duration)
+	 FROM meeting
+	)
+ORDER BY meeting_id
+
+
